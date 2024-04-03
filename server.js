@@ -1,20 +1,9 @@
 const express = require('express')
 const app = express();
-
+require('dotenv').config();
 const db = require('./db');
+app.use(express.json());
 
-app.get('/' ,function(req,res){
-    var hello = {
-        name : 'hello',
-        size : '10 cm',
-        is_sambhar : true,
-        
-    }
-    res.send('hello');
-    res.send(hello);
-    
-
-});
 
 app.get('/' ,function(req,res){
     var customised_idli = {
@@ -53,8 +42,9 @@ app.post('/person',async (req,res) => {
         res.status(500).json({error : 'internal Server Error'});
 
     }
-})
-const PORT = 8000;
+});
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=> {
     console.log(`listening on port ${PORT}`)
