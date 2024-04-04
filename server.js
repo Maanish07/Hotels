@@ -3,9 +3,46 @@ const app = express();
 require('dotenv').config();
 const db = require('./db');
 app.use(express.json());
+const passport = require('passport');
+const { Passport } = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 
-app.get('/' ,function(req,res){
+
+
+
+
+const logRequest = (req, res, next ) => {
+    console.log(`[${new Date().toLocaleDateString()}] Request made to : ${req.originalUrl}`);
+    next();
+}
+app.use(logRequest);
+
+
+
+
+passport.use(new LocalStrategy(async (username , password , done) => {
+    try {
+        console.log('Received credentials: ', USERNAME , password);
+        const username = await Person.findOne({username : USERNMAE});
+        if(!user){
+            return done(null, false, {message : 'Incorrect Username.'});
+        }
+        const isPasswordMatch = user.password === password ? true : false;
+        if(isPasswordMatch){
+            return done(null, user);
+        }
+        else{
+            return done(null, false, {message : 'Incorrect password.'});
+        }
+    }catch (err){
+        return done(err);
+    }
+}))
+
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate('local', {session : false});
+app.get('/',localAuthMiddleware ,function(req,res){
     var customised_idli = {
         name : 'rava',
         size : '10 cm',
