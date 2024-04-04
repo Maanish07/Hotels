@@ -28,6 +28,15 @@ const personSchema = new mongoose.Schema({
     address: {
         type : String,
 
+    },
+    username :{
+        type : String,
+        required : true,
+
+    },
+    password : {
+        type : String,
+        required : true,
     }
 });
 
